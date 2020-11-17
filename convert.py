@@ -22,44 +22,55 @@ def convert_coordinates(size, box):
     return x, y, width, height
 
 
-def convert(path):
+def convert(filepath: str) -> None:
     # for each file ending in .xml in the specified path
-    files = glob.glob(path + "*.xml")
+    files = glob.glob(filepath + "*.xml")
     for filename in files:
         xml = minidom.parse(filename)
 
         # output filename - replace .xml with .txt
-        fname_out = (filename[:-4] + '.txt')
+        filename_out = (filename[:-4] + '.txt')
 
-        with open(fname_out, "w") as file:
+        with open(filename_out, "w") as file:
             # get data needed for writing
             items = xml.getElementsByTagName('object')
             size = xml.getElementsByTagName('size')[0]
-            width = int((size.getElementsByTagName('width')[0]).firstChild.data)
-            height = int((size.getElementsByTagName('height')[0]).firstChild.data)
+            width = int((size.getElementsByTagName('width')[0])
+                        .firstChild.data)
+            height = int((size.getElementsByTagName('height')[0])
+                         .firstChild.data)
 
             # for each object within the image
             for item in items:
                 label = "-1"
-                classid = (item.getElementsByTagName('name')[0]).firstChild.data
+                class_id = (item.getElementsByTagName('name')[0])\
+                    .firstChild.data
                 labels = get_labels()
-                if classid in labels:
-                    label = str(labels[classid])
+                if class_id in labels:
+                    label = str(labels[class_id])
                 else:
-                    print("warning: label '%s' not in look-up table" % classid)
+                    print("warning: label '%s' not in look-up table" % class_id)
 
                 # get bbox coordinates
                 bounding_box = (item.getElementsByTagName('bndbox')[0])
-                xmin = bounding_box.getElementsByTagName('xmin')[0].firstChild.data
-                ymin = bounding_box.getElementsByTagName('ymin')[0].firstChild.data
-                xmax = bounding_box.getElementsByTagName('xmax')[0].firstChild.data
-                ymax = bounding_box.getElementsByTagName('ymax')[0].firstChild.data
+                x_min = bounding_box.getElementsByTagName('xmin')[0]\
+                    .firstChild.data
+                y_min = bounding_box.getElementsByTagName('ymin')[0]\
+                    .firstChild.data
+                x_max = bounding_box.getElementsByTagName('xmax')[0]\
+                    .firstChild.data
+                y_max = bounding_box.getElementsByTagName('ymax')[0]\
+                    .firstChild.data
 
-                box_not_converted = (float(xmin), float(xmax), float(ymin), float(ymax))
-                box_converted = (convert_coordinates((width, height), box_not_converted))
+                box_not_converted = (float(x_min), float(x_max),
+                                     float(y_min), float(y_max))
+                box_converted = (convert_coordinates((width, height),
+                                                     box_not_converted))
 
-                # write to the file in format <object-class> <x> <y> <width> <height>
-                file.write(label + " " + " ".join([("%.6f" % a) for a in box_converted]) + '\n')
+                # write to the file in format <object-class> <x> <y>
+                # <width> <height>
+                file.write(label + " " + " ".join([("%.6f" % a) for a in
+                                                   box_converted]) + '\n')
 
     print("Wrote " + str(len(files)) + " .txt files")
 
