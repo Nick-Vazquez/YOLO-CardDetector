@@ -1,9 +1,13 @@
 import glob
+from typing import Tuple
 from xml.dom import minidom
+
 from labels import get_labels
 
 
-def convert_coordinates(size, box):
+def convert_coordinates(size: Tuple[int, int],
+                        box: Tuple[float, float, float, float]
+                        ) -> Tuple[float, float, float, float]:
     width_percent_per_pixel = 1.0 / size[0]
     height_percent_per_pixel = 1.0 / size[1]
 
@@ -43,7 +47,7 @@ def convert(filepath: str) -> None:
             # for each object within the image
             for item in items:
                 label = "-1"
-                class_id = (item.getElementsByTagName('name')[0])\
+                class_id = (item.getElementsByTagName('name')[0]) \
                     .firstChild.data
                 labels = get_labels()
                 if class_id in labels:
@@ -53,13 +57,13 @@ def convert(filepath: str) -> None:
 
                 # get bbox coordinates
                 bounding_box = (item.getElementsByTagName('bndbox')[0])
-                x_min = bounding_box.getElementsByTagName('xmin')[0]\
+                x_min = bounding_box.getElementsByTagName('xmin')[0] \
                     .firstChild.data
-                y_min = bounding_box.getElementsByTagName('ymin')[0]\
+                y_min = bounding_box.getElementsByTagName('ymin')[0] \
                     .firstChild.data
-                x_max = bounding_box.getElementsByTagName('xmax')[0]\
+                x_max = bounding_box.getElementsByTagName('xmax')[0] \
                     .firstChild.data
-                y_max = bounding_box.getElementsByTagName('ymax')[0]\
+                y_max = bounding_box.getElementsByTagName('ymax')[0] \
                     .firstChild.data
 
                 box_not_converted = (float(x_min), float(x_max),
