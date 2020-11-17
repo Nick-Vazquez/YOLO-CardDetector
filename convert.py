@@ -48,10 +48,11 @@ def convert(path):
                     print("warning: label '%s' not in look-up table" % classid)
 
                 # get bbox coordinates
-                xmin = ((item.getElementsByTagName('bndbox')[0]).getElementsByTagName('xmin')[0]).firstChild.data
-                ymin = ((item.getElementsByTagName('bndbox')[0]).getElementsByTagName('ymin')[0]).firstChild.data
-                xmax = ((item.getElementsByTagName('bndbox')[0]).getElementsByTagName('xmax')[0]).firstChild.data
-                ymax = ((item.getElementsByTagName('bndbox')[0]).getElementsByTagName('ymax')[0]).firstChild.data
+                bounding_box = (item.getElementsByTagName('bndbox')[0])
+                xmin = bounding_box.getElementsByTagName('xmin')[0].firstChild.data
+                ymin = bounding_box.getElementsByTagName('ymin')[0].firstChild.data
+                xmax = bounding_box.getElementsByTagName('xmax')[0].firstChild.data
+                ymax = bounding_box.getElementsByTagName('ymax')[0].firstChild.data
 
                 box_not_converted = (float(xmin), float(xmax), float(ymin), float(ymax))
                 box_converted = (convert_coordinates((width, height), box_not_converted))
