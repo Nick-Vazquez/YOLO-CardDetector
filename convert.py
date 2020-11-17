@@ -24,7 +24,8 @@ def convert_coordinates(size, box):
 
 def convert(path):
     # for each file ending in .xml in the specified path
-    for filename in glob.glob(path + "*.xml"):
+    files = glob.glob(path + "*.xml")
+    for filename in files:
         xml = minidom.parse(filename)
 
         # output filename - replace .xml with .txt
@@ -60,7 +61,7 @@ def convert(path):
                 # write to the file in format <object-class> <x> <y> <width> <height>
                 file.write(label + " " + " ".join([("%.6f" % a) for a in box_converted]) + '\n')
 
-    print("Wrote " + str(len(glob.glob(path + "*.xml"))) + " .txt files")
+    print("Wrote " + str(len(files)) + " .txt files")
 
 
 path = "assets/test_zipped/"
