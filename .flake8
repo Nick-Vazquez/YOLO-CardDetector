@@ -1,0 +1,27 @@
+[flake8]
+max-line-length = 80
+max-doc-length = 80
+exclude =
+    .git,
+    *.pyc,
+    __pycache__,
+    docs/source/conf.py,
+    old,
+    build,
+    dist
+
+# Complexity of functions
+max-complexity = 10
+
+# Count the number of errors
+count = true
+statistics = true
+
+# Rules for Sphinx Documentation
+rst-roles =
+    class,
+    func,
+    ref,
+rst-directives =
+    envvar,
+    exception,
